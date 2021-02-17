@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "base.h": "c",
+        "bridge.h": "c",
+        "cstdio": "c",
+        "deque": "c",
+        "string": "c",
+        "vector": "c",
+        "mr_helper.h": "c",
+        "utils.h": "c"
+    }
+}

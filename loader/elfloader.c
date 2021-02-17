@@ -133,7 +133,7 @@ int32 mrc_init(void) {
     {
         typedef int32 (*mr_sleep_t)(uint32 ms);
         mr_sleep_t mr_sleep = (mr_sleep_t)(((void**)inFuncs.mr_table)[36]);
-        mr_sleep(2000);
+        mr_sleep(200);
     }
 
     rawElf = mrc_readFileFromMrp("bin.elf", &rawElfLen, 0);
