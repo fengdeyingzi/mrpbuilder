@@ -7,6 +7,12 @@
         "string": "c",
         "vector": "c",
         "mr_helper.h": "c",
-        "utils.h": "c"
+        "utils.h": "c",
+        "*.tcc": "c",
+        "unordered_map": "c",
+        "fstream": "c",
+        "istream": "c",
+        "ostream": "c",
+        "sstream": "c"
     }
 }

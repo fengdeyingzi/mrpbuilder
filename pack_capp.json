@@ -9,6 +9,7 @@
         "./lib/start.mr",
         "./bin/bin.elf",
         "./demo/test.bmp",
-        "./lib/cfunction.ext"
+        "./lib/cfunction.ext",
+        "./capp/2.bmp.png"
     ]
 }

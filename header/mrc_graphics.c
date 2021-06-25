@@ -43,7 +43,7 @@ BITMAP_565 *readBitmap565FromAssets(char *filename){
 	 
 	 if(len>0){
 		printf("open ............\n");
-		 f= capp_open(filename,1);
+		 f= mrc_open(filename,1);
 		printf("malloc %d", len);
 		buf = mrc_malloc(len);
 		if(buf==NULL){
@@ -51,8 +51,8 @@ BITMAP_565 *readBitmap565FromAssets(char *filename){
 		}
 		if(f>0){
 		 printf("read");
-		 capp_read(f, buf, len);
-		 capp_close(f);
+		 mrc_read(f, buf, len);
+		 mrc_close(f);
 		 printf("bmp_read");
 		 re = bmp_read(buf,len);
 		}
@@ -158,7 +158,62 @@ void gl_drawRect(int32 x,int32 y,int32 w,int32 h,uint32 color){
  }
 }
 
+void gl_drawLine(int16 x1, int16 y1, int16 x2, int16 y2, uint32 color)
+{
+ 	int x, y, dx, dy, c1, c2, err, swap = 0;
+
+
+	/*
+	nativecolor = (r/8)<<11;
+	nativecolor |=(g/4)<<5;
+	nativecolor |=(b/8);     
+	*/
+
+	/*   
+	if (x1 < 0 || x1 >= MR_SCREEN_W || x2 < 0 || x2 >= MR_SCREEN_W ||
+	y1 < 0 || y1 >= MR_SCREEN_H || y2 < 0 || y2 >= MR_SCREEN_H)
+	return;
+	*/
+
+	dx = x2 - x1; dy = y2 - y1;
+	if (((dx < 0) ? -dx : dx) < ((dy < 0) ? -dy : dy))
+	{
+		swap = 1;                       /* take the long way        */
+		x = x1; x1 = y1; y1 = x;
+		x = x2; x2 = y2; y2 = x;
+	}
+	if (x1 > x2)
+	{
+		x = x1; x1 = x2; x2 = x;        /* always move to the right */
+		y = y1; y1 = y2; y2 = y;
+	}
+
+	dx = x2 - x1; dy = y2 - y1;
+	c1 = dy * 2; dy = 1;
+	if (c1 < 0)
+	{
+		c1 = -c1;
+		dy = -1;
+	}
+	err = c1 - dx; c2 = err - dx;
+	x = x1; y = y1;
+	while (x <= x2)
+	{
+		gl_drawPoint((swap?y:x),(swap?x:y),color);
+		x++;
+		if (err < 0)
+			err += c1;
+		else
+		{
+			y += dy;
+			err += c2;
+		}
+	}
+ 
+}
+
 //画圆
+/*
 void gl_drawCir(int32 x,int32 y,int32 r,uint32 color){
  int ix,iy;
  
@@ -179,6 +234,100 @@ void gl_drawCir(int32 x,int32 y,int32 r,uint32 color){
  }
  //printf("color>>24 = %d\n",color>>24);
 }
+*/
+
+void drawCircle(int x, int y, int radius, unsigned int color)
+{
+    int i = 0;
+    int tx = 0, ty = radius, d = 3 - (radius << 1);
+
+    while (tx < ty)
+    {
+        for (i = x - ty; i <= x + ty; ++i)
+        {
+           gl_drawPoint( i, y - tx, color);
+            if (tx){
+               gl_drawPoint( i, y + tx, color);
+
+            }
+               
+        }
+        if (d < 0)
+            d += (tx << 2) + 6;
+        else
+        {
+            for (i = x - tx; i <= x + tx; ++i)
+            {
+               gl_drawPoint( i, y - ty, color);
+               gl_drawPoint( i, y + ty, color);
+            }
+            d += ((tx - ty) << 2) + 10, ty--;
+        }
+        tx++;
+    }
+    if (tx == ty)
+        for (i = x - ty; i <= x + ty; ++i)
+        {
+           gl_drawPoint( i, y - tx, color);
+           gl_drawPoint( i, y + tx, color);
+        }
+    
+}
+
+void gl_drawCir(int x0,int y0,int r, uint32 color)
+{
+	//使用正负法画圆
+	int x, y, f;//(x,y)为当前坐标 f为误差值
+	x = x0;
+	y = y0 + r;
+	f = 0;
+
+	while(y >= y0){//从圆周的右上部分开始
+		gl_drawLine( x, y, 2 * x0 - x, y,color);
+		gl_drawLine( x, 2 * y0 -y, 2 * x0 - x, 2 * y0 -y,color);
+
+		if(f > 0){
+			f = f - 2 * (y - y0) + 1;
+			y--;//向圆内走
+		}
+		else{
+			f = f + 2 * (x - x0) + 1;
+			x++;//向圆外走
+		}
+	}
+
+	if(y == y0)
+		gl_drawPoint( x, y,color);
+}
+
+void gl_Circle(int x0,int y0,int r, uint32 color)
+{
+	//使用正负法画圆
+	int x, y, f;//(x,y)为当前坐标 f为误差值
+	x = x0;
+	y = y0 + r;
+	f = 0;
+
+	while(y >= y0){//从圆周的右上部分开始
+		gl_drawPoint( x, y,color);//对称地画出四个象限内的坐标点
+		gl_drawPoint( 2 * x0 - x, y,color);
+		gl_drawPoint( x, 2 * y0 -y,color);
+		gl_drawPoint( 2 * x0 - x, 2 * y0 -y,color);
+
+		if(f > 0){
+			f = f - 2 * (y - y0) + 1;
+			y--;//向圆内走
+		}
+		else{
+			f = f + 2 * (x - x0) + 1;
+			x++;//向圆外走
+		}
+	}
+
+	if(y == y0)
+		gl_drawPoint( x, y,color);
+}
+
 
 int32 bitmap565getInfo(BITMAP_565* bmp, BITMAPINFO *info){
 	memset(info,0, sizeof(BITMAPINFO));

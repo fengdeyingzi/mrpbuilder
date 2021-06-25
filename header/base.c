@@ -2,56 +2,63 @@
 #include "base.h"
 #include "bridge.h"
 #include "utils.h"
+#include "encode.h"
+
 
 int32 SCRW;
 int32 SCRH;
 int32 SCREEN_BIT;
 
 mr_table_st *_mr_table;
-mrc_mallocFileData mallocdata;
-mrc_freeFileData freedata;
-mrc_realloc realloc;
-mrc_memcpy memcpy;
-mrc_memmove memmove;
-mrc_strcpy strcpy;
-mrc_strncpy strncpy;
-mrc_strcat strcat;
-mrc_strncat strncat;
-mrc_memcmp memcmp;
-mrc_strcmp strcmp;
-mrc_strncmp strncmp;
-mrc_strcoll strcoll;
-mrc_memchr memchr;
-mrc_memset memset;
-mrc_strlen strlen;
-mrc_strstr strstr;
-mrc_strtoul strtoul;
-mrc_rand rand;
-mrc_wap wap;
-mrc_open capp_open;
-mrc_seek capp_seek;
-mrc_close capp_close;
-mrc_write capp_write;
-mrc_read capp_read;
+T_mr_malloc mallocdata;
+T_mr_free freedata;
+T_mr_realloc realloc;
+T_memcpy memcpy;
+T_memmove memmove;
+T_strcpy strcpy;
+T_strncpy strncpy;
+T_strcat strcat;
+T_strncat strncat;
+T_memcmp memcmp;
+T_strcmp strcmp;
+T_strncmp strncmp;
+T_strcoll strcoll;
+T_memchr memchr;
+T_memset memset;
+T_strlen strlen;
+T_strstr strstr;
+T_strtoul strtoul;
+T_rand rand;
+T_mr_connectWAP wap;
+T_mr_open mrc_open;
+T_mr_seek mrc_seek;
+T_mr_close mrc_close;
+T_mr_write mrc_write;
+T_mr_read mrc_read;
 mrc_dtextline dtextline;
 mrc_dtext dtext;
-mrc_atoi atoi;
+T_atoi atoi;
 #define cls _cls
 #define ref _ref
-mrc_printf printf;
-mrc_sprintf sprintf;
-mrc_getuptime getuptime;
-mrc_remove remove;
-mrc_getLen getlen;
-mrc_rename rename;
-mrc_mkDir mkDir;
-mrc_rmDir rmDir;
+T_mr_printf printf;
+T_sprintf sprintf;
+T_mr_getTime getuptime;
+T_mr_remove remove;
+T_mr_getLen getlen;
+T_mr_rename rename;
+T_mr_mkDir mkDir;
+T_mr_rmDir rmDir;
+T_mr_sleep sleep;
+T_mr_plat mrc_plat;
+T_mr_platEx mrc_platEx;
 
-mrc_timercreate timercreate;
-mrc_timerstart timerstart;
-mrc_timersettime timersettime;
-mrc_timerstop timerstop;
-mrc_timerdel timerdel;
+MRC_TIMERCREATE timercreate;
+MRC_TIMERSTART timerstart;
+MRC_TIMERSETTIME timersettime;
+MRC_TIMERSTOP timerstop;
+MRC_TIMERDEL timerdel;
+
+T__mr_readFile mrc_readFileFromMrp;
 
 uint16 *getscrbuf() {
     return *(_mr_table->mr_screenBuf);
@@ -504,39 +511,55 @@ int32 wstrlen(const char *txt) {
 
 int _dtext(const char *pcText, int x, int y, int r, int g, int b, int is_unicode, int font) {
     uint16 *un_text = pcText;
+	uint32 temp_len = 0;
     if(!is_unicode){
-        // gb->
+		temp_len = strlen(pcText)*2+2;
+		un_text = malloc(temp_len);
+        UTF8ToUni(pcText, un_text,temp_len);
     }
     int32 len = wstrlen(un_text);
     int ix = x;
     int iy = y;
     uint16 ncolor = MAKERGB565(r, g, b);
     int fontw, fonth;
-    for (int i = 0; i < len; i++) {
-        uint16 id = un_text[i] << 8 || un_text[i] >> 8;
+    for (int i = 0; i < len/2; i++) {
+        uint16 id = un_text[i] << 8 | un_text[i] >> 8;
         _mr_table->mr_platDrawChar(id, ix, iy, ncolor);
         _mr_table->mr_getCharBitmap(id, font, &fontw, &fonth);
         ix += fontw;
     }
+	if(!is_unicode){
+		free(un_text);
+	}
     return 0;
 }
 
 int _dtextline(const char *pcText, int x, int y, int r, int g, int b, int is_unicode, int font) {
     uint16 *un_text = pcText;
     int32 len = wstrlen((const char*)un_text);
+	uint32 temp_len = 0;
+    if(!is_unicode){
+		temp_len = strlen(pcText)*2+2;
+		un_text = malloc(temp_len);
+        UTF8ToUni(pcText, un_text,temp_len);
+    }
     int ix = x;
     int iy = y;
     uint16 ncolor = MAKERGB565(r, g, b);
     int fontw, fonth;
-    for (int i = 0; i < len; i++) {
-        uint16 id = un_text[i] << 8 || un_text[i] >> 8;
+    for (int i = 0; i < len/2; i++) {
+        uint16 id = un_text[i] << 8 | un_text[i] >> 8;
         _mr_table->mr_platDrawChar(id, ix, iy, ncolor);
         _mr_table->mr_getCharBitmap(id, font, &fontw, &fonth);
         ix += fontw;
         if (id == '\n') {
+		    ix = x;
             iy += fonth + 2;
         }
     }
+	if(!is_unicode){
+		free(un_text);
+	}
     return 0;
 }
 
@@ -585,9 +608,9 @@ FILE *capp_fopen(const char *path, const char *mode) {
         file_mode = MR_FILE_RDONLY | MR_FILE_WRONLY;
         seek_mode = SEEK_END;
     }
-    int f = capp_open(path, file_mode);
+    int f = mrc_open(path, file_mode);
     if (f > 0) {
-        capp_seek(f, 0, seek_mode);
+        mrc_seek(f, 0, seek_mode);
         FILE *file = malloc(sizeof(FILE));
         // file->_tmpfname = path;
         file->_file = f;
@@ -598,24 +621,24 @@ FILE *capp_fopen(const char *path, const char *mode) {
 }
 
 unsigned int capp_fread(void *buf, size_t size, size_t count, FILE *f) {
-    int re = capp_read(f->_file, buf, size * count);
+    int re = mrc_read(f->_file, buf, size * count);
     if (re == -1)
         return -1;
     else {
         int count = re % size;
-        capp_seek(f->_file, -count, SEEK_CUR);
+        mrc_seek(f->_file, -count, SEEK_CUR);
         return re / size;
     }
 }
 
 
 int capp_fseek(FILE *f, long offset, int mode) {
-    return capp_seek(f->_file, offset, mode);
+    return mrc_seek(f->_file, offset, mode);
 }
 
 
 int capp_fwrite(const void *buf, size_t size, size_t count, FILE *f) {
-    int32 re = capp_write(f->_file, buf, size * count);
+    int32 re = mrc_write(f->_file, buf, size * count);
     if (re == -1)
         return -1;
     else
@@ -624,10 +647,10 @@ int capp_fwrite(const void *buf, size_t size, size_t count, FILE *f) {
 
 
 int capp_fflush(FILE *f) {
-    return capp_close(f->_file);
+    return mrc_close(f->_file);
 }
 int capp_fclose(FILE *f) {
-    return capp_close(f->_file);
+    return mrc_close(f->_file);
 }
 
 void base_init() {
@@ -655,11 +678,13 @@ void base_init() {
     rand = _mr_table->rand;
     wap = _mr_table->mr_connectWAP;
 
-    capp_open = _mr_table->mr_open;
-    capp_read = _mr_table->mr_read;
-    capp_seek = _mr_table->mr_seek;
-    capp_write = _mr_table->mr_write;
-    capp_close = _mr_table->mr_close;
+    mrc_open = _mr_table->mr_open;
+    mrc_read = _mr_table->mr_read;
+    mrc_seek = _mr_table->mr_seek;
+    mrc_write = _mr_table->mr_write;
+    mrc_close = _mr_table->mr_close;
+
+	mrc_readFileFromMrp = _mr_table->_mr_readFile;
     
 
     // mr_platDrawChar = _mr_table->mr_platDrawChar;
@@ -703,9 +728,9 @@ void base_init() {
  rmDir = _mr_table->mr_rmDir;
     // getdatetime = _mr_table->mr_getDateTime;
     // mr_getUserInfo = _mr_table->mr_getUserInfo;
-    // sleep = _mr_table->mr_sleep;
-    // mr_plat = _mr_table->mr_plat;
-    // mr_platEx = _mr_table->mr_platEx;
+    sleep = _mr_table->mr_sleep;
+    mrc_plat = _mr_table->mr_plat;
+    mrc_platEx = _mr_table->mr_platEx;
     // mr_ferrno = _mr_table->mr_ferrno;
     // mrc_findStart = _mr_table->mr_findStart;
     // mrc_findGetNext = _mr_table->mr_findGetNext;

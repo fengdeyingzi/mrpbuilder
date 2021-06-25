@@ -32,4 +32,15 @@ void gl_drawCir(int32 x,int32 y,int32 r,uint32 color);
 void drawBitmap565Ex(BITMAP_565* bmp, int32 x,int32 y,int32 w,int32 h, int32 tx, int32 ty,int32 tw,int32 th);
 int32 bitmap565getInfo(BITMAP_565* bmp, BITMAPINFO *info);
 
+#define readBitmap(name) (int32)readBitmap565(name)
+#define drawBitmapFlip(buf,x,y,w,h,sx,sy) drawBitmap565Flip((BITMAP_565*)buf,x,y,w,h,sx,sy)
+#define drawBitmap(b,x,y) drawBitmap565((BITMAP_565*)b,x,y)
+#define bitmapFree(b) bitmap565Free((BITMAP_565*)b)
+#define readBitmapFromAssets(filename) (int32)readBitmap565FromAssets(filename)
+#define drawRect gl_drawRect
+// #define drawCir gl_drawCir
+void drawCircle(int x, int y, int radius, unsigned int color);
+#define drawBitmapEx(bmp,x,y,w,h,tx,ty,tw,th) drawBitmap565Ex((BITMAP_565*)bmp,x,y,w,h,tx,ty,tw,th)
+#define bitmapGetInfo(bmp,info) bitmap565getInfo((BITMAP_565*)bmp,info)
+
 #endif

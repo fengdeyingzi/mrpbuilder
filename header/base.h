@@ -206,7 +206,7 @@ void _ref(int16 x, int16 y, uint16 w, uint16 h);
 
 
 
-typedef void (*mrc_printf)(const char* format, ...);
+typedef void (*MRC_PRINTF)(const char* format, ...);
 
 
 // typedef const char* (*T_mr_getCharBitmap)(uint16 ch, uint16 fontSize, int* width, int* height);
@@ -216,30 +216,30 @@ typedef void (*mrc_printf)(const char* format, ...);
 // typedef uint32 (*T_mr_getTime)(void);
 typedef int32 (*getdatetime)(mr_datetime* datetime);
 typedef int32 (*mr_getUserInfo)(mr_userinfo* info);
-typedef int32 (*sleep)(uint32 ms);
+// typedef int32 (*sleep)(uint32 ms);
 typedef int32 (*mr_plat)(int32 code, int32 param);
 
 // typedef void (*MR_PLAT_EX_CB)(uint8* output, int32 output_len);
 typedef int32 (*mr_platEx)(int32 code, uint8* input, int32 input_len, uint8** output, int32* output_len, MR_PLAT_EX_CB* cb);
 
 typedef int32 (*mr_ferrno)(void);
-typedef int32 (*mrc_open)(const char* filename, uint32 mode);
-typedef int32 (*mrc_close)(int32 f);
+// typedef int32 (*mrc_open)(const char* filename, uint32 mode);
+// typedef int32 (*mrc_close)(int32 f);
 typedef int32 (*T_mr_info)(const char* filename);
-typedef int32 (*mrc_write)(int32 f,const void* p, uint32 l);
-typedef int32 (*mrc_read)(int32 f, void* p, uint32 l);
+// typedef int32 (*mrc_write)(int32 f,const void* p, uint32 l);
+// typedef int32 (*mrc_read)(int32 f, void* p, uint32 l);
 
-typedef int32 (*mrc_seek)(int32 f, int32 pos, int method);
-typedef int32 (*mrc_getLen)(const char* filename);
-typedef int32 (*mrc_remove)(const char* filename);
-typedef int32 (*mrc_rename)(const char* oldname, const char* newname);
-typedef int32 (*mrc_mkDir)(const char* name);
-typedef int32 (*mrc_rmDir)(const char* name);
+// typedef int32 (*mrc_seek)(int32 f, int32 pos, int method);
+// typedef int32 (*mrc_getLen)(const char* filename);
+// typedef int32 (*mrc_remove)(const char* filename);
+// typedef int32 (*mrc_rename)(const char* oldname, const char* newname);
+// typedef int32 (*mrc_mkDir)(const char* name);
+// typedef int32 (*mrc_rmDir)(const char* name);
 
-typedef int32 (*mrc_findStart)(const char* name, char* buffer, uint32 len);
-typedef int32 (*mrc_findGetNext)(int32 search_handle, char* buffer, uint32 len);
-typedef int32 (*mrc_findStop)(int32 search_handle);
-typedef int32 (*mrc_exit)(void);
+// typedef int32 (*mrc_findStart)(const char* name, char* buffer, uint32 len);
+// typedef int32 (*mrc_findGetNext)(int32 search_handle, char* buffer, uint32 len);
+// typedef int32 (*mrc_findStop)(int32 search_handle);
+// typedef int32 (*mrc_exit)(void);
 /*
 typedef int32 (*T_mr_startShake)(int32 ms);
 typedef int32 (*T_mr_stopShake)(void);
@@ -251,32 +251,32 @@ typedef int32 (*T_mr_sendSms)(char* pNumber, char* pContent, int32 flags);
 typedef void (*T_mr_call)(char* number);
 typedef int32 (*T_mr_getNetworkID)(void);
 */
-typedef void (*mrc_wap)(char* wap);
+// typedef void (*mrc_wap)(char* wap);
 
 typedef void (*mr_platDrawChar)(uint16 ch, int32 x, int32 y, int32 color);
 
-typedef int32 (*mrc_menuCreate)(const char* title, int16 num);
-typedef int32 (*mrc_menuSetItem)(int32 menu, const char* text, int32 index);
-typedef int32 (*mrc_menuShow)(int32 menu);
-typedef int32 (*mrc_menuSetFocus)(int32 menu, int32 index);
-typedef int32 (*mrc_menuRelease)(int32 menu);
-typedef int32 (*mrc_menuRefresh)(int32 menu);
+// typedef int32 (*mrc_menuCreate)(const char* title, int16 num);
+// typedef int32 (*mrc_menuSetItem)(int32 menu, const char* text, int32 index);
+// typedef int32 (*mrc_menuShow)(int32 menu);
+// typedef int32 (*mrc_menuSetFocus)(int32 menu, int32 index);
+// typedef int32 (*mrc_menuRelease)(int32 menu);
+// typedef int32 (*mrc_menuRefresh)(int32 menu);
 
-typedef int32 (*mrc_dialogCreate)(const char* title, const char* text, int32 type);
-typedef int32 (*mrc_dialogRelease)(int32 dialog);
-typedef int32 (*mrc_dialogRefresh)(int32 dialog, const char* title, const char* text, int32 type);
+// typedef int32 (*mrc_dialogCreate)(const char* title, const char* text, int32 type);
+// typedef int32 (*mrc_dialogRelease)(int32 dialog);
+// typedef int32 (*mrc_dialogRefresh)(int32 dialog, const char* title, const char* text, int32 type);
 
-typedef int32 (*mrc_textCreate)(const char* title, const char* text, int32 type);
-typedef int32 (*mrc_textRelease)(int32 text);
-typedef int32 (*mrc_textRefresh)(int32 handle, const char* title, const char* text);
+// typedef int32 (*mrc_textCreate)(const char* title, const char* text, int32 type);
+// typedef int32 (*mrc_textRelease)(int32 text);
+// typedef int32 (*mrc_textRefresh)(int32 handle, const char* title, const char* text);
 
-typedef int32 (*mrc_editCreate)(const char* title, const char* text, int32 type, int32 max_size);
-typedef int32 (*mrc_editRelease)(int32 edit);
-typedef const char* (*mrc_editGetText)(int32 edit);
+// typedef int32 (*mrc_editCreate)(const char* title, const char* text, int32 type, int32 max_size);
+// typedef int32 (*mrc_editRelease)(int32 edit);
+// typedef const char* (*mrc_editGetText)(int32 edit);
 
 
 
-typedef int32 (*mrc_getScreenInfo)(mr_screeninfo* screeninfo);
+// typedef int32 (*mrc_getScreenInfo)(mr_screeninfo* screeninfo);
 
 typedef int32 (*MR_INIT_NETWORK_CB)(int32 result);
 typedef int32 (*MR_GET_HOST_CB)(int32 ip);
@@ -292,43 +292,25 @@ typedef int32 (*mrc_recvfrom)(int32 s, char* buf, int len, int32* ip, uint16* po
 typedef int32 (*mrc_send)(int32 s, const char* buf, int len);
 typedef int32 (*mrc_sendto)(int32 s, const char* buf, int len, int32 ip, uint16 port);
 
-typedef void* (*mrc_mallocFileData)(uint32 len);
-typedef void (*mrc_freeFileData)(void* p, uint32 len);
-typedef void* (*mrc_realloc)(void* p, uint32 oldlen, uint32 len);
 
-typedef void* (*mrc_memcpy)(void* s1, const void* s2, int n);
-typedef void* (*mrc_memmove)(void* s1, const void* s2, int n);
-typedef char* (*mrc_strcpy)(char* s1, const char* s2);
-typedef char* (*mrc_strncpy)(char* s1, const char* s2, int n);
-typedef char* (*mrc_strcat)(char* s1, const char* s2);
-typedef char* (*mrc_strncat)(char* s1, const char* s2, int n);
-typedef int (*mrc_memcmp)(const void* s1, const void* s2, int n);
-typedef int (*mrc_strcmp)(const char* s1, const char* s2);
-typedef int (*mrc_strncmp)(const char* s1, const char* s2, int n);
-typedef int (*mrc_strcoll)(const char* s1, const char* s2);
-typedef void* (*mrc_memchr)(const void* s, int c, int n);
-typedef void* (*mrc_memset)(void* s, int c, int n);
-typedef int (*mrc_strlen)(const char* s);
-typedef char* (*mrc_strstr)(const char* s1, const char* s2);
 
-typedef int (*mrc_sprintf)(char* s, const char* format, ...);
-typedef int (*mrc_atoi)(const char* nptr);
-typedef unsigned long int (*mrc_strtoul)(const char* nptr,
-                                       char** endptr, int base);
-typedef int (*mrc_rand)(void);
+typedef int (*MRC_SPRINTF)(char* s, const char* format, ...);
+
+
+
 
 
 
 
 void capp_exit();
-int mrc_getlen(const char* filename);
-int mrc_wstrlen(const char * txt);
-typedef int32 (*mrc_timercreate)();
-typedef int32 (*mrc_timerstart)(int t, int time, int data, mrc_timerCB timerCB, int loop);
-typedef int32 (*mrc_timersettime)(int32 t,int32 time);
-typedef int32 (*mrc_timerstop)(int t);
-typedef int32 (*mrc_timerdel)(int t);
-typedef uint32 (*mrc_getuptime)();
+// int mrc_getlen(const char* filename);
+// int mrc_wstrlen(const char * txt);
+typedef int32 (*MRC_TIMERCREATE)();
+typedef int32 (*MRC_TIMERSTART)(int t, int time, int data, mrc_timerCB timerCB, int loop);
+typedef int32 (*MRC_TIMERSETTIME)(int32 t,int32 time);
+typedef int32 (*MRC_TIMERSTOP)(int t);
+typedef int32 (*MRC_TIMERDEL)(int t);
+typedef uint32 (*MRC_GETUPTIME)();
 typedef int (*mrc_dtext)(const char *pcText, int x,int y, int r,int g, int b, int is_unicode, int font);
 typedef int (*mrc_dtextline)(const char *pcText, int x,int y, int r,int g, int b, int is_unicode, int font);
 int mrc_dtextex(char *pcText, int x,int y, rectst *rect, colorst *color, int is_unicode, int font);
@@ -387,46 +369,49 @@ void mrc_free(void *data);
 #define refall() ref(0,0,SCRW,SCRH)
 
 
-extern mrc_mallocFileData mallocdata;
-extern mrc_freeFileData freedata;
-extern mrc_realloc realloc;
-extern mrc_memcpy memcpy;
-extern mrc_memmove memmove;
-extern mrc_strcpy strcpy;
-extern mrc_strncpy strncpy;
-extern mrc_strcat strcat;
-extern mrc_strncat strncat;
-extern mrc_memcmp memcmp;
-extern mrc_strcmp strcmp;
-extern mrc_strncmp strncmp;
-extern mrc_strcoll strcoll;
-extern mrc_memchr memchr;
-extern mrc_memset memset;
-extern mrc_strlen strlen;
-extern mrc_strstr strstr;
-extern mrc_strtoul strtoul;
-extern mrc_rand rand;
-extern mrc_wap wap;
-extern mrc_open capp_open;
-extern mrc_close capp_close;
-extern mrc_write capp_write;
-extern mrc_read capp_read;
+extern T_mr_malloc mallocdata;
+extern T_mr_free freedata;
+extern T_mr_realloc realloc;
+extern T_memcpy memcpy;
+extern T_memmove memmove;
+extern T_strcpy strcpy;
+extern T_strncpy strncpy;
+extern T_strcat strcat;
+extern T_strncat strncat;
+extern T_memcmp memcmp;
+extern T_strcmp strcmp;
+extern T_strncmp strncmp;
+extern T_strcoll strcoll;
+extern T_memchr memchr;
+extern T_memset memset;
+extern T_strlen strlen;
+extern T_strstr strstr;
+extern T_strtoul strtoul;
+extern T_rand rand;
+extern T_mr_connectWAP wap;
+extern T_mr_open mrc_open;
+extern T_mr_close mrc_close;
+extern T_mr_write mrc_write;
+extern T_mr_read mrc_read;
 extern mrc_dtextline dtextline;
 extern mrc_dtext dtext;
-extern mrc_atoi atoi;
-extern mrc_printf printf;
-extern mrc_sprintf sprintf;
-extern mrc_getuptime getuptime;
-extern mrc_remove remove;
-extern mrc_getLen getlen;
-extern mrc_rename rename;
-extern mrc_mkDir mkDir;
-extern mrc_rmDir rmDir;
-extern mrc_timercreate timercreate;
-extern mrc_timerstart timerstart;
-extern mrc_timersettime timersettime;
-extern mrc_timerstop timerstop;
-extern mrc_timerdel timerdel; 
+extern T_atoi atoi;
+extern T_mr_printf printf;
+extern T_sprintf sprintf;
+#define mrc_printf printf
+#define mrc_sprintf mrc_sprintf
+extern T_mr_getTime getuptime;
+extern T_mr_remove remove;
+extern T_mr_getLen getlen;
+extern T_mr_rename rename;
+extern T_mr_mkDir mkDir;
+extern T_mr_rmDir rmDir;
+extern MRC_TIMERCREATE timercreate;
+extern MRC_TIMERSTART timerstart;
+extern MRC_TIMERSETTIME timersettime;
+extern MRC_TIMERSTOP timerstop;
+extern MRC_TIMERDEL timerdel; 
+extern T__mr_readFile mrc_readFileFromMrp;
 
 
 #endif

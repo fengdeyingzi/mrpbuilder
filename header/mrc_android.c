@@ -23,10 +23,10 @@ void *mrc_readFileFromAssets(char *filename, int32 *len){
 //  debug_printf(path);
  *len = (int32)getlen((const char*)path);
  buf = (void*)malloc(*len);
- f = capp_open(path, 1);
+ f = mrc_open(path, 1);
  if(f>0){
- capp_read(f, buf, *len);
- capp_close(f);
+ mrc_read(f, buf, *len);
+ mrc_close(f);
  return buf;
  }
  return NULL;
@@ -41,7 +41,11 @@ void mrc_freeFileFromAssets(void *data,int32 len){
 void *mrc_readFileFromAssets(char *filename, int32 *len){
 	uint8 *buf = NULL;
 	int32 re = 0;
- re = mrc_readFileFromMrpEx(NULL,(const char*)filename,&buf,len,0);
+//  re = mrc_readFileFromMrpEx(NULL,(const char*)filename,&buf,len,0);
+ void* temp = mrc_readFileFromMrp((const char*)filename, len,0);
+ buf = malloc(*len);
+ memcpy(buf,temp,*len);
+ freedata(temp,*len);
  if(re == MR_SUCCESS){
 	 return buf;
  }
